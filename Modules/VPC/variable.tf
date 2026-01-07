@@ -48,14 +48,14 @@ variable "SG_Name" {
 }
 variable "ingress_rule" {
   type = map(object({
-    type = string
-    from_port = number
-    to_port = number
-    protocol = string
+    type       = string
+    from_port  = number
+    to_port    = number
+    protocol   = string
     cidr_block = list(string)
 
-    
+
 
   }))
-  
+
 }

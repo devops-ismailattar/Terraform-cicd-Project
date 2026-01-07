@@ -49,8 +49,8 @@ variable "SG_Name" {
 
 variable "servers" {
   type = map(object({
-    ami = string
+    ami           = string
     instance_type = string
   }))
-  
+
 }
