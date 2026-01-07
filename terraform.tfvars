@@ -24,20 +24,20 @@ SG_Name = "Terrafrom_SG"
 
 servers = {
   "Node1" = {
-    ami = "ami-00ca570c1b6d79f36"
+    ami           = "ami-00ca570c1b6d79f36"
     instance_type = "m7i-flex.large"
-    
+
   }
 
   "Node2" = {
-    ami = "ami-00ca570c1b6d79f36"
+    ami           = "ami-00ca570c1b6d79f36"
     instance_type = "t3.micro"
-    
+
   }
 
   "Node3" = {
-    ami = "ami-00ca570c1b6d79f36"
+    ami           = "ami-00ca570c1b6d79f36"
     instance_type = "t3.small"
-    
+
   }
 }
