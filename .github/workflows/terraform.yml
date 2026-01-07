@@ -1,0 +1,105 @@
+name: terraform cicd pipeline
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+    TF_VERSION: 1.6.6
+jobs:
+    terraform-plan:
+        name: Terraform Plan & Checks
+        runs-on: ubuntu-latest
+        steps: 
+            - name: checkout code
+              uses: actions/checkout@v6.0.1
+
+            - name: setup terraform 
+              uses: hashicorp/setup-terraform@v3.1.2
+              with:
+                terraform_version: ${{ env.TF_VERSION }}
+            - name: terraform init
+              run: |
+                terraform init
+              working-directory: .
+
+            - name: terraform formate check
+              run: |
+                terraform fmt -check -recursive
+              working-directory: .
+
+            - name: terraform validate
+              run: |
+                terraform validate
+              working-directory: .
+
+            - name: Setup TFLint
+              uses: terraform-linters/setup-tflint@v6
+
+            - name: Run TFLint
+              run: |
+                tflint --init
+                tflint
+              working-directory: .
+
+            - name: run tfsec (security scan)
+              uses: aquasecurity/tfsec-action@v1.0.3
+              with:
+                working-directory: .
+
+            - name: terraform plan
+              working-directory: .
+              run: |
+                terraform plan -out=tfplan
+                terraform show -no-color tfplan > plan.txt
+              env:
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+            - name: upload terraform plan
+              uses: actions/upload-artifact@v6.0.0
+              with:
+                name: plan
+                path: ./plan.txt
+
+
+# -------------------------------
+# CD JOB: APPLY (APPROVAL REQUIRED)
+# -------------------------------
+
+    terraform-apply:
+        name: terraform apply (manual approval required)
+        needs: terraform-plan
+        environment: production
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v6.0.1
+              
+            - name: setup terraform 
+              uses: hashicorp/setup-terraform@v3.1.2
+              with:
+                terraform_version: ${{ env.TF_VERSION }}
+            - name: terraform init
+              run: |
+                terraform init
+              working-directory: .
+
+            - name: terraform apply 
+              run: |
+                terraform apply --auto-approve
+              working-directory: .
+              env:
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            
+            - name: terraform output
+              run: terraform output
+              working-directory: .
+
+
+                
+
+                
+            
