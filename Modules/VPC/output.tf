@@ -1,16 +1,16 @@
 output "VPC_ID" {
   value = aws_vpc.custom.id
-  
+
 }
 
 output "Public_Subnet_id" {
   value = aws_subnet.Publicesubnet.id
-  
+
 }
 
 output "Private_Subnet_id" {
   value = aws_subnet.Privatesubnet.id
-  
+
 }
 output "ING_id" {
   value = aws_internet_gateway.IGW.id
