@@ -62,3 +62,14 @@ module "ec2" {
   }]
 }
 
+
+resource "aws_instance" "sonar" {
+  ami = "ami-00ca570c1b6d79f36"
+  instance_type = "t3.small"
+  subnet_id = var.Public_subnet_Name
+
+  tags = {
+    Name = "VAPT_server"
+  }
+  
+}
