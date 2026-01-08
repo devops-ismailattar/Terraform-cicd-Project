@@ -60,8 +60,5 @@ module "ec2" {
     device_name           = "/dev/sdb"
 
   }]
-
-
-
 }
 
