@@ -5,7 +5,7 @@ resource "aws_instance" "servers" {
   ami             = var.ami
   instance_type   = var.instance_type
   subnet_id       = var.subnet_id
-  security_groups = var.security_group_id
+  vpc_security_group_ids = var.security_group_id
 
   #------------------------Root Volume configuration----------------#
   root_block_device {
